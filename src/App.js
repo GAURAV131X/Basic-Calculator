@@ -1,25 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import Keypad from "./Keypad";
+import Result from "./Result";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      result: ""
+    };
+  }
+
+  onClick = (button) => {
+    if (button === "=") {
+      this.calculate();
+    } else if (button === "C") {
+      this.reset();
+    } else if (button === "CE") {
+      this.backSpace();
+    } else {
+      this.setState({ result: this.state.result + button });
+      console.log("express edited");
+    }
+  };
+  calculate() {
+    var checkResult = "";
+    checkResult = this.state.result;
+
+    try {
+      // eslint-disable-next-line
+      this.setState({ result: eval(checkResult) });
+    } catch (e) {
+      this.setState({ result: "Enter valid Expression" });
+      console.log(e.message);
+    }
+  }
+  reset() {
+    this.setState({result : " "})
+    console.log("result cleared")
+  }
+  backSpace() {
+    this.setState({result: this.state.result.splice(0, -1)})
+  }
+  render() {
+    return (
+      <div className="cal-body">
+      {/* <div>{this.state.result} </div> */}
+        <Result  result={this.state.result} />
+        <Keypad onClick={this.onClick} />
+        
+      </div>
+    )
+    
+  }
 }
-
-export default App;
